@@ -21,20 +21,24 @@ const LoginPage = () => {
   const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
     setIsLoading(true);
     try {
-      const { status } = await axiosInstance.post("/auth/local", data);
+      const { status, data: userData } = await axiosInstance.post(
+        "/auth/local",
+        data
+      );
       if (status === 200) {
-        toast.success(
-          "You will navigate to the login page after 2 seconds to login!",
-          {
-            position: "bottom-center",
-            duration: 1500,
-            style: {
-              backgroundColor: "black",
-              color: "white",
-              width: "fit-content",
-            },
-          }
-        );
+        toast.success("You will navigate to the login page after 2 seconds!", {
+          position: "bottom-center",
+          duration: 1200,
+          style: {
+            backgroundColor: "black",
+            color: "white",
+            width: "fit-content",
+          },
+        });
+        localStorage.setItem("loggedInUser", JSON.stringify(userData));
+        setTimeout(() => {
+          location.replace("/");
+        }, 1200);
       }
     } catch (error) {
       const errorObj = error as AxiosError<IErrorResponse>;

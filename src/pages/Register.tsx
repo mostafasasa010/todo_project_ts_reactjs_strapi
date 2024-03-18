@@ -8,8 +8,10 @@ import axiosInstance from "../config/axios.config";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const {
     register,
@@ -27,7 +29,7 @@ const RegisterPage = () => {
           "You will navigate to the home page after 2 seconds to login!",
           {
             position: "bottom-center",
-            duration: 1500,
+            duration: 1200,
             style: {
               backgroundColor: "black",
               color: "white",
@@ -35,6 +37,9 @@ const RegisterPage = () => {
             },
           }
         );
+        setTimeout(() => {
+          navigate("/login");
+        }, 1200);
       }
     } catch (error) {
       const errorObj = error as AxiosError<IErrorResponse>;
