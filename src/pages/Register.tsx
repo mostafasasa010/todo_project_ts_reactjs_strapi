@@ -4,8 +4,12 @@ import Input from "../components/ui/Input";
 import InputErrorMsg from "../components/InputErrorMsg";
 import { RegisterInputs } from "../data";
 import { IRegisterForm } from "../interfaces";
+import axiosInstance from "../config/axios.config";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 const RegisterPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -13,23 +17,49 @@ const RegisterPage = () => {
   } = useForm<IRegisterForm>();
 
   // Handlers
-  const onSubmit: SubmitHandler<IRegisterForm> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<IRegisterForm> = async (data) => {
+    setIsLoading(true);
+    try {
+      const { status } = await axiosInstance.post("/auth/local/register", data);
+      if (status === 200) {
+        toast.success(
+          "You will navigate to the login page after 2 seconds to login!",
+          {
+            position: "bottom-center",
+            duration: 1500,
+            style: {
+              backgroundColor: "black",
+              color: "white",
+              width: "fit-content",
+            },
+          }
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Renders
   const renderRegisterInputs = () => {
-    return RegisterInputs.map(({ name, placeholder, validation }, index) => (
-      <div key={index}>
-        <Input
-          placeholder={placeholder}
-          {...register(name, {
-            required: validation.required,
-            minLength: validation.minLength,
-            pattern: validation.pattern,
-          })}
-        />
-        {errors[name] && <InputErrorMsg msg={errors[name]?.message} />}
-      </div>
-    ));
+    return RegisterInputs.map(
+      ({ type, name, placeholder, validation }, index) => (
+        <div key={index}>
+          <Input
+            type={type}
+            placeholder={placeholder}
+            {...register(name, {
+              required: validation.required,
+              minLength: validation.minLength,
+              pattern: validation.pattern,
+            })}
+          />
+          {errors[name] && <InputErrorMsg msg={errors[name]?.message} />}
+        </div>
+      )
+    );
   };
 
   return (
@@ -39,7 +69,9 @@ const RegisterPage = () => {
       </h2>
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         {renderRegisterInputs()}
-        <Button fullWidth>Register</Button>
+        <Button isLoading={isLoading} fullWidth>
+          Register
+        </Button>
       </form>
     </div>
   );
