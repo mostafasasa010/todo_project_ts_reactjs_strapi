@@ -38,7 +38,7 @@ interface ButtonProps
   extends HTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   children: ReactNode;
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 
 const Button = ({

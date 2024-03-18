@@ -1,4 +1,4 @@
-import { TNameRegister } from "../types";
+import { TNameLogin, TNameRegister } from "../types";
 
 export interface IRegisterForm {
   username: string;
@@ -6,9 +6,31 @@ export interface IRegisterForm {
   password: string;
 }
 
+export interface ILoginForm {
+  identifier: string;
+  password: string;
+}
+
 export interface IRegisterInput {
   type: string;
   name: TNameRegister;
+  placeholder: string;
+  validation: {
+    required?: string;
+    minLength?: {
+      value: number;
+      message: string;
+    };
+    pattern?: {
+      value: RegExp;
+      message: string;
+    };
+  };
+}
+
+export interface ILoginInput {
+  type: string;
+  name: TNameLogin;
   placeholder: string;
   validation: {
     required?: string;

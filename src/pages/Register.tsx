@@ -2,7 +2,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import InputErrorMsg from "../components/InputErrorMsg";
-import { RegisterInputs } from "../data";
+import { registerInputs } from "../data";
 import { IErrorResponse, IRegisterForm } from "../interfaces";
 import axiosInstance from "../config/axios.config";
 import toast from "react-hot-toast";
@@ -24,7 +24,7 @@ const RegisterPage = () => {
       const { status } = await axiosInstance.post("/auth/local/register", data);
       if (status === 200) {
         toast.success(
-          "You will navigate to the login page after 2 seconds to login!",
+          "You will navigate to the home page after 2 seconds to login!",
           {
             position: "bottom-center",
             duration: 1500,
@@ -49,7 +49,7 @@ const RegisterPage = () => {
 
   // Renders
   const renderRegisterInputs = () => {
-    return RegisterInputs.map(
+    return registerInputs.map(
       ({ type, name, placeholder, validation }, index) => (
         <div key={index}>
           <Input
