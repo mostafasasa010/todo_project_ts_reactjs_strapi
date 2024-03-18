@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from "axios";
 import { TNameLogin, TNameRegister } from "../types";
 
 export interface IRegisterForm {
@@ -49,4 +50,18 @@ export interface IErrorResponse {
   error: {
     message?: string;
   };
+}
+
+export interface ITodo {
+  id: number;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+export interface IAuthenticatedQuery {
+  queryKey: string[];
+  url: string;
+  config?: AxiosRequestConfig;
 }
