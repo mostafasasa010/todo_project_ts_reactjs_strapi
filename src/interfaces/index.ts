@@ -22,3 +22,9 @@ export interface IRegisterInput {
     };
   };
 }
+
+export interface IErrorResponse {
+  error: {
+    message?: string;
+  };
+}

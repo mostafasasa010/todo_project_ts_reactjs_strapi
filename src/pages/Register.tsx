@@ -3,10 +3,11 @@ import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import InputErrorMsg from "../components/InputErrorMsg";
 import { RegisterInputs } from "../data";
-import { IRegisterForm } from "../interfaces";
+import { IErrorResponse, IRegisterForm } from "../interfaces";
 import axiosInstance from "../config/axios.config";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { AxiosError } from "axios";
 
 const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +37,11 @@ const RegisterPage = () => {
         );
       }
     } catch (error) {
-      console.log(error);
+      const errorObj = error as AxiosError<IErrorResponse>;
+      toast.error(`${errorObj.response?.data.error.message}`, {
+        position: "bottom-center",
+        duration: 2000,
+      });
     } finally {
       setIsLoading(false);
     }
