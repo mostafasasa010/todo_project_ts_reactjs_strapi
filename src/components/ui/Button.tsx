@@ -1,6 +1,7 @@
 import { cn } from "../../lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
 import { HTMLAttributes, ReactNode } from "react";
+import { TBtn } from "../../types";
 
 const buttonVariants = cva(
   "flex justify-center rounded - md font - medium text - white duration - 300 dark: text - black disabled:bg-indigo-400  disabled:hover:bg-indigo-400 disabled:cursor-not-allowed duration-200",
@@ -39,6 +40,7 @@ interface ButtonProps
     VariantProps<typeof buttonVariants> {
   children: ReactNode;
   isLoading?: boolean;
+  type?: TBtn;
 }
 
 const Button = ({
@@ -47,11 +49,13 @@ const Button = ({
   fullWidth,
   className,
   isLoading,
+  type,
   children,
   ...props
 }: ButtonProps) => {
   return (
     <button
+      type={type}
       className={cn(buttonVariants({ variant, size, fullWidth, className }))}
       disabled={isLoading}
       {...props}

@@ -260,7 +260,7 @@ const TodoList = () => {
       <Modal
         isOpen={isAddModalOpen}
         closeModal={onCloseAddModal}
-        title="Edit this todo"
+        title="Add a new todo"
       >
         <form className="space-y-3" onSubmit={handleAddOnSubmit}>
           <Input
@@ -282,7 +282,7 @@ const TodoList = () => {
             >
               Done
             </Button>
-            <Button variant={"cancel"} onClick={onCloseAddModal}>
+            <Button type="button" variant={"cancel"} onClick={onCloseAddModal}>
               Cancel
             </Button>
           </div>
@@ -315,7 +315,7 @@ const TodoList = () => {
             >
               Update
             </Button>
-            <Button variant={"cancel"} onClick={onCloseEditModal}>
+            <Button type="button" variant={"cancel"} onClick={onCloseEditModal}>
               Cancel
             </Button>
           </div>
@@ -338,7 +338,12 @@ const TodoList = () => {
           >
             Yes, remove
           </Button>
-          <Button variant={"cancel"} size={"sm"} onClick={closeConfirmModal}>
+          <Button
+            type="button"
+            variant={"cancel"}
+            size={"sm"}
+            onClick={closeConfirmModal}
+          >
             Cancel
           </Button>
         </div>
