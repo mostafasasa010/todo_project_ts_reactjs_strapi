@@ -28,6 +28,7 @@ const TodoList = () => {
   const userToken = `Bearer ${userData.jwt}`;
 
   // States
+  const [queryVersion, setQueryVersion] = useState(1);
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -36,7 +37,7 @@ const TodoList = () => {
   const [todoToEdit, setTodoToEdit] = useState<ITodo>(defaultTodo);
   const [titleError, setTitleError] = useState("");
   const { data, isLoading, error } = useAuthenticatedQuery({
-    queryKey: ["todoList", `${todoToEdit.id}`],
+    queryKey: ["todoList", `${queryVersion}`],
     url: "/users/me?populate=todos",
     config: {
       headers: {
@@ -118,6 +119,7 @@ const TodoList = () => {
         }
       );
       if (status === 200) {
+        setQueryVersion((prev) => prev + 1);
         toast.success("Done to add todo :) ", {
           position: "bottom-center",
           duration: 800,
@@ -159,6 +161,7 @@ const TodoList = () => {
         }
       );
       if (status === 200) {
+        setQueryVersion((prev) => prev + 1);
         toast.success("Done to edit todo :) ", {
           position: "bottom-center",
           duration: 800,
@@ -188,7 +191,8 @@ const TodoList = () => {
         },
       });
       if (status === 200) {
-        toast.success("Done to Delete todo :) ", {
+        setQueryVersion((prev) => prev + 1);
+        toast.success("Done to Delete todo.", {
           position: "bottom-center",
           duration: 600,
           style: {
