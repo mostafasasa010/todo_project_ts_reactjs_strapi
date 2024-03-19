@@ -8,8 +8,9 @@ import Textarea from "./ui/Textarea";
 import axiosInstance from "../config/axios.config";
 import toast from "react-hot-toast";
 import InputErrorMsg from "./InputErrorMsg";
-import NoTodosYet from "./noTodosYet";
-import TodoSkeleton from "./TodoSkeleton";
+import TodoSkeleton from "./skeleton/TodoSkeleton";
+import NoTodosYet from "./NoTodosYet";
+import BtnsTodoSkeleton from "./skeleton/BtnsTodoSkeleton";
 
 const TodoList = () => {
   // Constants
@@ -109,9 +110,7 @@ const TodoList = () => {
     try {
       const { status } = await axiosInstance.post(
         `/todos`,
-        {
-          data: { title: title, description: description },
-        },
+        { data: { title, description, user: [userData.user.id] } },
         {
           headers: {
             Authorization: userToken,
@@ -119,7 +118,6 @@ const TodoList = () => {
         }
       );
       if (status === 200) {
-        setQueryVersion((prev) => prev + 1);
         toast.success("Done to add todo :) ", {
           position: "bottom-center",
           duration: 800,
@@ -129,9 +127,8 @@ const TodoList = () => {
             width: "fit-content",
           },
         });
-        setTimeout(() => {
-          onCloseAddModal();
-        }, 500);
+        onCloseAddModal();
+        setQueryVersion((prev) => prev + 1);
       }
     } catch (error) {
       console.log(error);
@@ -161,7 +158,6 @@ const TodoList = () => {
         }
       );
       if (status === 200) {
-        setQueryVersion((prev) => prev + 1);
         toast.success("Done to edit todo :) ", {
           position: "bottom-center",
           duration: 800,
@@ -171,9 +167,8 @@ const TodoList = () => {
             width: "fit-content",
           },
         });
-        setTimeout(() => {
-          onCloseEditModal();
-        }, 500);
+        onCloseEditModal();
+        setQueryVersion((prev) => prev + 1);
       }
     } catch (error) {
       console.log(error);
@@ -191,19 +186,17 @@ const TodoList = () => {
         },
       });
       if (status === 200) {
-        setQueryVersion((prev) => prev + 1);
         toast.success("Done to Delete todo.", {
           position: "bottom-center",
-          duration: 600,
+          duration: 800,
           style: {
             backgroundColor: "black",
             color: "white",
             width: "fit-content",
           },
         });
-        setTimeout(() => {
-          closeConfirmModal();
-        }, 300);
+        closeConfirmModal();
+        setQueryVersion((prev) => prev + 1);
       }
     } catch (error) {
       console.log(error);
@@ -224,10 +217,19 @@ const TodoList = () => {
 
   return (
     <div className="space-y-1">
-      <div className="mb-4">
-        <Button className="m-auto" size={"sm"} onClick={onOpenAddModal}>
-          Post new todo
-        </Button>
+      <div className="w-fit mx-auto my-10">
+        {isLoading ? (
+          <BtnsTodoSkeleton />
+        ) : (
+          <div className="flex items-center space-x-2">
+            <Button size={"sm"} onClick={onOpenAddModal}>
+              Post new todo
+            </Button>
+            <Button variant={"outline"} size={"sm"} onClick={() => {}}>
+              Generate todos
+            </Button>
+          </div>
+        )}
       </div>
       {data.todos.length ? (
         data.todos.map((todo: ITodo, idx: number) => (
@@ -276,6 +278,7 @@ const TodoList = () => {
           />
           <div className="flex items-center space-x-3 mt-4">
             <Button
+              type="submit"
               isLoading={isLoadingEdit}
               fullWidth
               className="bg-indigo-700 hover:bg-indigo-800"
@@ -309,6 +312,7 @@ const TodoList = () => {
           />
           <div className="flex items-center space-x-3 mt-4">
             <Button
+              type="submit"
               isLoading={isLoadingEdit}
               fullWidth
               className="bg-indigo-700 hover:bg-indigo-800"
@@ -331,6 +335,7 @@ const TodoList = () => {
       >
         <div className="flex items-center space-x-3">
           <Button
+            type="submit"
             isLoading={isLoadingEdit}
             variant={"danger"}
             size={"sm"}
