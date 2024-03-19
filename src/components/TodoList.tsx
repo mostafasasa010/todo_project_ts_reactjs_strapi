@@ -8,6 +8,8 @@ import Textarea from "./ui/Textarea";
 import axiosInstance from "../config/axios.config";
 import toast from "react-hot-toast";
 import InputErrorMsg from "./InputErrorMsg";
+import NoTodosYet from "./noTodosYet";
+import TodoSkeleton from "./TodoSkeleton";
 
 const TodoList = () => {
   // Constants
@@ -121,7 +123,7 @@ const TodoList = () => {
       if (status === 200) {
         toast.success("Done to Delete todo :) ", {
           position: "bottom-center",
-          duration: 800,
+          duration: 600,
           style: {
             backgroundColor: "black",
             color: "white",
@@ -130,7 +132,7 @@ const TodoList = () => {
         });
         setTimeout(() => {
           closeConfirmModal();
-        }, 500);
+        }, 300);
       }
     } catch (error) {
       console.log(error);
@@ -139,6 +141,14 @@ const TodoList = () => {
     }
   };
 
+  if (isLoading)
+    return (
+      <div className="space-y-1 p-3 animate-pulse">
+        {Array.from({ length: 3 }, (_, idx) => (
+          <TodoSkeleton key={idx} />
+        ))}
+      </div>
+    );
   if (isLoading) return <h3>Loading...</h3>;
   if (error) return <h3>{error?.message}</h3>;
 
@@ -168,7 +178,7 @@ const TodoList = () => {
           </div>
         ))
       ) : (
-        <h3>No Todos Yet!</h3>
+        <NoTodosYet />
       )}
 
       {/* Edit todo modal */}
