@@ -18,6 +18,10 @@ const TodoList = () => {
     title: "",
     description: "",
   };
+  const defaultAddTodo = {
+    title: "",
+    description: "",
+  };
   const storageKey = "loggedInUser";
   const userDataString = localStorage.getItem(storageKey);
   const userData = userDataString ? JSON.parse(userDataString) : null;
@@ -25,8 +29,10 @@ const TodoList = () => {
 
   // States
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+  const [todoToAdd, setTodoToAdd] = useState<ITodo>(defaultAddTodo);
   const [todoToEdit, setTodoToEdit] = useState<ITodo>(defaultTodo);
   const [titleError, setTitleError] = useState("");
   const { data, isLoading, error } = useAuthenticatedQuery({
@@ -50,6 +56,15 @@ const TodoList = () => {
     setIsEditModalOpen(true);
   };
 
+  const onCloseAddModal = () => {
+    setTodoToAdd(defaultAddTodo);
+    setIsAddModalOpen(false);
+  };
+
+  const onOpenAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+
   const closeConfirmModal = () => {
     setTodoToEdit(defaultTodo);
     setIsOpenConfirmModal(false);
@@ -58,6 +73,17 @@ const TodoList = () => {
   const openConfirmModal = (todo: ITodo) => {
     setIsOpenConfirmModal(true);
     setTodoToEdit(todo);
+  };
+
+  const handleAddOnChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value, name } = event.target;
+    setTodoToAdd({
+      ...todoToAdd,
+      [name]: value,
+    });
+    setTitleError("");
   };
 
   const handleOnChange = (
@@ -69,6 +95,47 @@ const TodoList = () => {
       [name]: value,
     });
     setTitleError("");
+  };
+
+  const handleAddOnSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const { title, description } = todoToAdd;
+    if (title.trim().length < 5 || !title) {
+      setTitleError("Must be todo title large than 5 characters!");
+      return;
+    }
+    setIsLoadingEdit(true);
+    try {
+      const { status } = await axiosInstance.post(
+        `/todos`,
+        {
+          data: { title: title, description: description },
+        },
+        {
+          headers: {
+            Authorization: userToken,
+          },
+        }
+      );
+      if (status === 200) {
+        toast.success("Done to add todo :) ", {
+          position: "bottom-center",
+          duration: 800,
+          style: {
+            backgroundColor: "black",
+            color: "white",
+            width: "fit-content",
+          },
+        });
+        setTimeout(() => {
+          onCloseAddModal();
+        }, 500);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoadingEdit(false);
+    }
   };
 
   const handleOnSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -149,11 +216,15 @@ const TodoList = () => {
         ))}
       </div>
     );
-  if (isLoading) return <h3>Loading...</h3>;
   if (error) return <h3>{error?.message}</h3>;
 
   return (
     <div className="space-y-1">
+      <div className="mb-4">
+        <Button className="m-auto" size={"sm"} onClick={onOpenAddModal}>
+          Post new todo
+        </Button>
+      </div>
       {data.todos.length ? (
         data.todos.map((todo: ITodo, idx: number) => (
           <div
@@ -180,6 +251,39 @@ const TodoList = () => {
       ) : (
         <NoTodosYet />
       )}
+
+      {/* Add todo modal */}
+      <Modal
+        isOpen={isAddModalOpen}
+        closeModal={onCloseAddModal}
+        title="Edit this todo"
+      >
+        <form className="space-y-3" onSubmit={handleAddOnSubmit}>
+          <Input
+            name="title"
+            value={todoToAdd.title}
+            onChange={handleAddOnChange}
+          />
+          {titleError && <InputErrorMsg msg={titleError} />}
+          <Textarea
+            name="description"
+            value={todoToAdd.description}
+            onChange={handleAddOnChange}
+          />
+          <div className="flex items-center space-x-3 mt-4">
+            <Button
+              isLoading={isLoadingEdit}
+              fullWidth
+              className="bg-indigo-700 hover:bg-indigo-800"
+            >
+              Done
+            </Button>
+            <Button variant={"cancel"} onClick={onCloseAddModal}>
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Modal>
 
       {/* Edit todo modal */}
       <Modal
@@ -214,7 +318,7 @@ const TodoList = () => {
         </form>
       </Modal>
 
-      {/* DELETE TODO CONFIRM MODAL */}
+      {/* Delete TODO CONFIRM MODAL */}
       <Modal
         isOpen={isOpenConfirmModal}
         closeModal={closeConfirmModal}
