@@ -83,6 +83,7 @@ export interface IApiPaginator {
   pageSize: number;
   pageCount: number;
   total: number;
+  isLoading: boolean;
   onClickPrev: () => void;
   onClickNext: () => void;
 }
