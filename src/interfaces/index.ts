@@ -55,9 +55,10 @@ export interface IErrorResponse {
 export interface ITodo {
   id: number;
   title: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
 }
 
 export interface IAuthenticatedQuery {
