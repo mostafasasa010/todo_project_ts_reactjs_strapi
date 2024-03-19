@@ -10,6 +10,7 @@ import ErrorHandler from "../components/errors/ErrorHandler";
 import HomePage from "../pages";
 import LoginPage from "../pages/Login";
 import RegisterPage from "../pages/Register";
+import Todos from "../pages/Todos";
 
 const storageKey = "loggedInUser";
 const userDataString = localStorage.getItem(storageKey);
@@ -65,6 +66,18 @@ const router = createBrowserRouter(
               data={userData}
             >
               <RegisterPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="todos"
+          element={
+            <ProtectedRoute
+              isAllowed={userData}
+              redirectPath="/login"
+              data={userData}
+            >
+              <Todos />
             </ProtectedRoute>
           }
         />

@@ -61,8 +61,28 @@ export interface ITodo {
   publishedAt?: string;
 }
 
+export interface ITodoPaginator {
+  id?: number;
+  attributes: {
+    title: string;
+    description?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    publishedAt?: string;
+  };
+}
+
 export interface IAuthenticatedQuery {
   queryKey: string[];
   url: string;
   config?: AxiosRequestConfig;
+}
+
+export interface IApiPaginator {
+  page: number;
+  pageSize: number;
+  pageCount: number;
+  total: number;
+  onClickPrev: () => void;
+  onClickNext: () => void;
 }
