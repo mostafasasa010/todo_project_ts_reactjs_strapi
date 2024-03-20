@@ -7,6 +7,7 @@ const Navbar = () => {
   const storageKey = "loggedInUser";
   const userDataString = localStorage.getItem(storageKey);
   const userData = userDataString ? JSON.parse(userDataString) : null;
+  const admin = "mostafa.ahmed@gmail.com";
 
   const onLogout = () => {
     localStorage.removeItem(storageKey);
@@ -25,16 +26,18 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="max-w-2xl mx-auto mt-7 mb-20 px-3 py-5">
+    <nav className="max-w-2xl mx-auto mt-7 mb-10 px-3 py-5">
       <ul className="flex items-center justify-between">
         <li className="duration-200 font-semibold text-lg text-gray-700">
           <NavLink to="/">Home</NavLink>
         </li>
         {userData ? (
           <div className="flex items-center space-x-6">
-            <li className="duration-200  text-lg">
-              <NavLink to="/todos">Todos</NavLink>
-            </li>
+            {userData?.user?.email === admin && (
+              <li className="duration-200  text-lg">
+                <NavLink to="/todos">Todos</NavLink>
+              </li>
+            )}
             <li className="duration-200  text-lg">
               <NavLink to="/profile">Profile</NavLink>
             </li>

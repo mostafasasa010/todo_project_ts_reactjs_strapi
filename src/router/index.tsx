@@ -16,6 +16,8 @@ const storageKey = "loggedInUser";
 const userDataString = localStorage.getItem(storageKey);
 const userData = userDataString ? JSON.parse(userDataString) : null;
 
+const admin = "mostafa.ahmed@gmail.com";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -73,7 +75,7 @@ const router = createBrowserRouter(
           path="todos"
           element={
             <ProtectedRoute
-              isAllowed={userData}
+              isAllowed={userData?.user?.email === admin}
               redirectPath="/login"
               data={userData}
             >

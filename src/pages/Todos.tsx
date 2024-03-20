@@ -4,8 +4,6 @@ import Paginator from "../components/Paginator";
 import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
 import { ITodoPaginator } from "../interfaces";
 import TodoSkeletonPagination from "../components/skeleton/TodoSkeletonPagination";
-import Button from "../components/ui/Button";
-import { generateFakeTodos } from "../utils/functions";
 
 const Todos = () => {
   const storageKey = "loggedInUser";
@@ -54,15 +52,8 @@ const Todos = () => {
 
   return (
     <section className="max-w-2xl mx-auto">
-      <div className="flex items-center justify-between space-x-2">
-        <Button
-          size={"sm"}
-          onClick={generateFakeTodos}
-          title="Generate 100 records"
-        >
-          Generate todos
-        </Button>
-        <div className="flex items-center justify-between space-x-2 text-md">
+      {data.meta.pagination.pageCount !== 0 && (
+        <div className="flex items-center justify-end mb-4 gap-2">
           <select
             className="border-2 border-indigo-600 rounded-md p-2"
             value={sortBy}
@@ -83,7 +74,8 @@ const Todos = () => {
             <option value={100}>100</option>
           </select>
         </div>
-      </div>
+      )}
+
       <div className="flex flex-col gap-1 mb-10">
         {data.data.length ? (
           data.data.map(({ id, attributes }: ITodoPaginator, idx: number) => (

@@ -11,7 +11,6 @@ import InputErrorMsg from "./InputErrorMsg";
 import TodoSkeleton from "./skeleton/TodoSkeleton";
 import NoTodosYet from "./NoTodosYet";
 import BtnsTodoSkeleton from "./skeleton/BtnsTodoSkeleton";
-import { generateFakeTodos } from "../utils/functions";
 
 const TodoList = () => {
   // Constants
@@ -225,14 +224,6 @@ const TodoList = () => {
           <div className="flex items-center space-x-2">
             <Button size={"sm"} onClick={onOpenAddModal}>
               Post new todo
-            </Button>
-            <Button
-              type="button"
-              variant={"outline"}
-              size={"sm"}
-              onClick={generateFakeTodos}
-            >
-              Generate todos
             </Button>
           </div>
         )}
