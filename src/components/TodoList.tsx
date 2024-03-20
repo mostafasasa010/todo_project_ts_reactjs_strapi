@@ -11,7 +11,7 @@ import InputErrorMsg from "./InputErrorMsg";
 import TodoSkeleton from "./skeleton/TodoSkeleton";
 import NoTodosYet from "./NoTodosYet";
 import BtnsTodoSkeleton from "./skeleton/BtnsTodoSkeleton";
-import { faker } from "@faker-js/faker";
+import { generateFakeTodos } from "../utils/functions";
 
 const TodoList = () => {
   // Constants
@@ -32,7 +32,6 @@ const TodoList = () => {
   // States
   const [queryVersion, setQueryVersion] = useState(1);
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
-  const [isLoadingGenerate, setIsLoadingGenerate] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
@@ -99,33 +98,6 @@ const TodoList = () => {
       [name]: value,
     });
     setTitleError("");
-  };
-
-  const handleGenerateFakeTodos = async () => {
-    setIsLoadingGenerate(true);
-    for (let i = 0; i < 20; i++) {
-      try {
-        await axiosInstance.post(
-          `/todos`,
-          {
-            data: {
-              title: faker.word.words(3),
-              description: faker.lorem.paragraph(2),
-              user: [userData.user.id],
-            },
-          },
-          {
-            headers: {
-              Authorization: userToken,
-            },
-          }
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    setQueryVersion((prev) => prev + 1);
-    setIsLoadingGenerate(false);
   };
 
   const handleAddOnSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -256,10 +228,9 @@ const TodoList = () => {
             </Button>
             <Button
               type="button"
-              isLoading={isLoadingGenerate}
               variant={"outline"}
               size={"sm"}
-              onClick={handleGenerateFakeTodos}
+              onClick={generateFakeTodos}
             >
               Generate todos
             </Button>
