@@ -3,6 +3,7 @@ import NoTodosYet from "../components/NoTodosYet";
 import Button from "../components/ui/Button";
 import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
 import { IUsers } from "../interfaces";
+import UsersSkeleton from "../components/skeleton/UsersSkeleton";
 
 const Users = () => {
   const storageKey = "loggedInUser";
@@ -10,7 +11,7 @@ const Users = () => {
   const userData = userDataString ? JSON.parse(userDataString) : null;
   const userToken = `Bearer ${userData.jwt}`;
 
-  const { data } = useAuthenticatedQuery({
+  const { data, isLoading, error } = useAuthenticatedQuery({
     queryKey: [`profile-page`],
     url: `/users?populate=todos`,
     config: {
@@ -19,6 +20,16 @@ const Users = () => {
       },
     },
   });
+
+  if (isLoading)
+    return (
+      <div className="animate-pulse max-w-2xl mx-auto grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {Array.from({ length: 4 }, (_, idx) => (
+          <UsersSkeleton key={idx} />
+        ))}
+      </div>
+    );
+  if (error) return <h3>{error?.message}</h3>;
 
   return (
     <section className="max-w-2xl mx-auto mb-6">

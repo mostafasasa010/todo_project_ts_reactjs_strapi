@@ -11,6 +11,8 @@ import InputErrorMsg from "./InputErrorMsg";
 import TodoSkeleton from "./skeleton/TodoSkeleton";
 import NoTodosYet from "./NoTodosYet";
 import BtnsTodoSkeleton from "./skeleton/BtnsTodoSkeleton";
+import useSound from "use-sound";
+import successSound from "../assets/success.mp3";
 
 const TodoList = () => {
   // Constants
@@ -40,6 +42,7 @@ const TodoList = () => {
   const [todoToEdit, setTodoToEdit] = useState<ITodo>(defaultTodo);
   const [titleError, setTitleError] = useState("");
   const [todoDone, setTodoDone] = useState(false);
+  const [playSound] = useSound(successSound);
   const { data, isLoading, error } = useAuthenticatedQuery({
     queryKey: ["todoList", `${queryVersion}`],
     url: "/users/me?populate=todos",
@@ -102,17 +105,20 @@ const TodoList = () => {
     setTitleError("");
   };
 
-  const handleCheckboxChange = () =>
+  const handleCheckboxChange = () => {
     setTodoDone((prevTodoDone) => !prevTodoDone);
+  };
 
-  const handleCheckboxChangeTEdit = () =>
+  const handleCheckboxChangeTEdit = () => {
     setTodoToEdit((prevTodo) => ({
       ...prevTodo,
       done: !prevTodo.done,
     }));
+  };
 
   const handleToggleTodoDone = async (todo: ITodo) => {
-    const updatedTodo = { ...todo, done: !todo.done };
+    setTodoDone((prevTodoDone) => !prevTodoDone);
+    const updatedTodo = { ...todo, done: todoDone };
     try {
       const { status } = await axiosInstance.put(
         `/todos/${todo.id}`,
@@ -128,15 +134,7 @@ const TodoList = () => {
         }
       );
       if (status === 200) {
-        toast.success("Todo has done.", {
-          position: "bottom-center",
-          duration: 1000,
-          style: {
-            backgroundColor: "black",
-            color: "white",
-            width: "fit-content",
-          },
-        });
+        todoDone && playSound();
         setQueryVersion((prev) => prev + 1);
       }
     } catch (error) {
@@ -259,7 +257,7 @@ const TodoList = () => {
 
   if (isLoading)
     return (
-      <div className="space-y-1 p-3 animate-pulse">
+      <div className="space-y-1 animate-pulse max-w-2xl mx-auto">
         {Array.from({ length: 3 }, (_, idx) => (
           <TodoSkeleton key={idx} />
         ))}

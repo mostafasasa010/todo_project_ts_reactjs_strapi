@@ -23,7 +23,8 @@
     "react-router-dom": "^6.15.0",
     "sass": "^1.64.2",
     "sort-by": "^1.2.0",
-    "tailwind-merge": "^1.14.0"
+    "tailwind-merge": "^1.14.0",
+    "use-sound": "^4.0.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",

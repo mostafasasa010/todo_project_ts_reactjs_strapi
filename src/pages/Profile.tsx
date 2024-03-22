@@ -1,4 +1,5 @@
 import NoTodosYet from "../components/NoTodosYet";
+import TodoSkeleton from "../components/skeleton/TodoSkeleton";
 import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
 import { ITodo } from "../interfaces";
 
@@ -8,7 +9,7 @@ const Profile = () => {
   const userData = userDataString ? JSON.parse(userDataString) : null;
   const userToken = `Bearer ${userData.jwt}`;
 
-  const { data } = useAuthenticatedQuery({
+  const { data, isLoading, error } = useAuthenticatedQuery({
     queryKey: [`profile-page`],
     url: `/users/me?populate=todos`,
     config: {
@@ -17,6 +18,16 @@ const Profile = () => {
       },
     },
   });
+
+  if (isLoading)
+    return (
+      <div className="space-y-1 animate-pulse max-w-2xl mx-auto">
+        {Array.from({ length: 3 }, (_, idx) => (
+          <TodoSkeleton key={idx} />
+        ))}
+      </div>
+    );
+  if (error) return <h3>{error?.message}</h3>;
 
   return (
     <section className="max-w-2xl mx-auto">
