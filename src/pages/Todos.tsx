@@ -16,7 +16,7 @@ const Todos = () => {
   const [sortBy, setSortBy] = useState<string>("ASC");
   const { data, isLoading, isFetching } = useAuthenticatedQuery({
     queryKey: [`todos-page-${page}`, `${pageSize}`, `${sortBy}`],
-    url: `/todos?pagination[pageSize]=${pageSize}&pagination[page]=${page}&sort=createdAt:${sortBy}`,
+    url: `/todos?populate=user&pagination[pageSize]=${pageSize}&pagination[page]=${page}&sort=createdAt:${sortBy}`,
     config: {
       headers: {
         Authorization: userToken,
@@ -85,6 +85,12 @@ const Todos = () => {
             >
               <p className="w-full font-semibold">
                 {idx + 1} - {attributes.title}
+              </p>
+              <p className="w-full font-semibold text-right">
+                Username:{" "}
+                <span className="text-indigo-500 font-bold">
+                  {attributes.user.data.attributes.username}
+                </span>
               </p>
             </div>
           ))

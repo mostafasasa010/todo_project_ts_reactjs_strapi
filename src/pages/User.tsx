@@ -1,16 +1,18 @@
-import NoTodosYet from "../components/NoTodosYet";
+import { useParams } from "react-router-dom";
 import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
 import { ITodo } from "../interfaces";
+import NoTodosYet from "../components/NoTodosYet";
 
-const Profile = () => {
+const Users = () => {
   const storageKey = "loggedInUser";
   const userDataString = localStorage.getItem(storageKey);
   const userData = userDataString ? JSON.parse(userDataString) : null;
   const userToken = `Bearer ${userData.jwt}`;
 
+  const params = useParams();
   const { data } = useAuthenticatedQuery({
     queryKey: [`profile-page`],
-    url: `/users/me?populate=todos`,
+    url: `/users/${params.id}?populate=todos`,
     config: {
       headers: {
         Authorization: userToken,
@@ -61,4 +63,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Users;

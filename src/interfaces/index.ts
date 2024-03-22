@@ -59,6 +59,7 @@ export interface ITodo {
   createdAt?: string;
   updatedAt?: string;
   publishedAt?: string;
+  done?: boolean;
 }
 
 export interface ITodoPaginator {
@@ -69,7 +70,36 @@ export interface ITodoPaginator {
     createdAt?: string;
     updatedAt?: string;
     publishedAt?: string;
+    user: {
+      data: {
+        attributes: {
+          createdAt?: string;
+          email: string;
+          updatedAt?: string;
+          username: string;
+        };
+        id: number;
+      };
+    };
   };
+}
+
+interface Todo {
+  createdAt?: string;
+  description: string;
+  done?: boolean;
+  id: number;
+  publishedAt?: string;
+  title: string;
+  updatedAt?: string;
+}
+
+export interface IUsers {
+  createdAt: string;
+  email: string;
+  username: string;
+  id: number;
+  todos: Todo[];
 }
 
 export interface IAuthenticatedQuery {

@@ -12,6 +12,8 @@ import LoginPage from "../pages/Login";
 import RegisterPage from "../pages/Register";
 import Todos from "../pages/Todos";
 import Profile from "../pages/Profile";
+import Users from "../pages/Users";
+import User from "../pages/User";
 
 const storageKey = "loggedInUser";
 const userDataString = localStorage.getItem(storageKey);
@@ -81,6 +83,30 @@ const router = createBrowserRouter(
               data={userData}
             >
               <Todos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="users"
+          element={
+            <ProtectedRoute
+              isAllowed={userData?.user?.email === admin}
+              redirectPath="/login"
+              data={userData}
+            >
+              <Users />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="users/:id"
+          element={
+            <ProtectedRoute
+              isAllowed={userData?.user?.email === admin}
+              redirectPath="/login"
+              data={userData}
+            >
+              <User />
             </ProtectedRoute>
           }
         />
