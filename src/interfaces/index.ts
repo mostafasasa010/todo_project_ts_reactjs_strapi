@@ -60,6 +60,7 @@ export interface ITodo {
   updatedAt?: string;
   publishedAt?: string;
   done?: boolean;
+  toggleDone?: () => void;
 }
 
 export interface ITodoPaginator {

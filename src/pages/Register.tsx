@@ -56,16 +56,24 @@ const RegisterPage = () => {
   const renderRegisterInputs = () => {
     return registerInputs.map(
       ({ type, name, placeholder, validation }, index) => (
-        <div key={index}>
+        <div key={index} className="relative">
           <Input
+            id={name}
             type={type}
-            placeholder={placeholder}
+            className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-700 bg-gray-50 dark:bg-gray-200 border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-800 dark:border-gray-600 dark:focus:border-indigo-500 focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+            placeholder=" "
             {...register(name, {
               required: validation.required,
               minLength: validation.minLength,
               pattern: validation.pattern,
             })}
           />
+          <label
+            htmlFor={name}
+            className="absolute text-sm text-gray-800 dark:text-gray-800 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-indigo-600 peer-focus:dark:text-indigo-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+          >
+            {placeholder}
+          </label>
           {errors[name] && <InputErrorMsg msg={errors[name]?.message} />}
         </div>
       )
