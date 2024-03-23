@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
 import { ITodo } from "../interfaces";
 import NoTodosYet from "../components/NoTodosYet";
+import UserSkeleton from "../components/skeleton/UserSkeleton";
+import TodoSkeletonPagination from "../components/skeleton/TodoSkeletonPagination";
 
 const Users = () => {
   const storageKey = "loggedInUser";
@@ -10,7 +12,7 @@ const Users = () => {
   const userToken = `Bearer ${userData.jwt}`;
 
   const params = useParams();
-  const { data } = useAuthenticatedQuery({
+  const { data, isLoading, error, isFetching } = useAuthenticatedQuery({
     queryKey: [`profile-page`],
     url: `/users/${params.id}?populate=todos`,
     config: {
@@ -20,8 +22,23 @@ const Users = () => {
     },
   });
 
+  if (isLoading || isFetching)
+    return (
+      <div className="space-y-2 animate-pulse">
+        {Array.from({ length: 3 }, (_, idx) => (
+          <UserSkeleton key={idx} />
+        ))}
+        <div className="flex flex-col gap-2 !mt-7">
+          {Array.from({ length: 3 }, (_, idx) => (
+            <TodoSkeletonPagination key={`todo_${idx}`} />
+          ))}
+        </div>
+      </div>
+    );
+  if (error) return <h3>{error?.message}</h3>;
+
   return (
-    <section className="max-w-2xl mx-auto">
+    <section>
       {data && (
         <div className="w-full flex flex-col gap-2 hover:bg-gray-200 duration-300 p-3 rounded-md bg-gray-100">
           <p className="font-semibold bg-gray-700 rounded-md flex items-center text-white overflow-hidden">

@@ -11,7 +11,7 @@ const Users = () => {
   const userData = userDataString ? JSON.parse(userDataString) : null;
   const userToken = `Bearer ${userData.jwt}`;
 
-  const { data, isLoading, error } = useAuthenticatedQuery({
+  const { data, isLoading, error, isFetching } = useAuthenticatedQuery({
     queryKey: [`profile-page`],
     url: `/users?populate=todos`,
     config: {
@@ -21,9 +21,9 @@ const Users = () => {
     },
   });
 
-  if (isLoading)
+  if (isLoading || isFetching)
     return (
-      <div className="animate-pulse max-w-2xl mx-auto grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <div className="animate-pulse grid grid-cols-1 gap-4 sm:grid-cols-2">
         {Array.from({ length: 4 }, (_, idx) => (
           <UsersSkeleton key={idx} />
         ))}
@@ -32,8 +32,8 @@ const Users = () => {
   if (error) return <h3>{error?.message}</h3>;
 
   return (
-    <section className="max-w-2xl mx-auto mb-6">
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+    <section>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {data?.length ? (
           data.map(
             ({ id, username, email, createdAt }: IUsers, idx: number) => (

@@ -14,7 +14,7 @@ const Todos = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [sortBy, setSortBy] = useState<string>("ASC");
-  const { data, isLoading, isFetching } = useAuthenticatedQuery({
+  const { data, isLoading, isFetching, error } = useAuthenticatedQuery({
     queryKey: [`todos-page-${page}`, `${pageSize}`, `${sortBy}`],
     url: `/todos?populate=user&pagination[pageSize]=${pageSize}&pagination[page]=${page}&sort=createdAt:${sortBy}`,
     config: {
@@ -41,17 +41,18 @@ const Todos = () => {
     setSortBy(event.target.value);
   };
 
-  if (isLoading)
+  if (isLoading || isFetching)
     return (
-      <div className="max-w-2xl mx-auto space-y-1 p-3 animate-pulse">
+      <div className="space-y-1 animate-pulse mt-20">
         {Array.from({ length: 3 }, (_, idx) => (
           <TodoSkeletonPagination key={idx} />
         ))}
       </div>
     );
+  if (error) return <h3>{error?.message}</h3>;
 
   return (
-    <section className="max-w-2xl mx-auto">
+    <section>
       {data.meta.pagination.pageCount !== 0 && (
         <div className="flex items-center justify-end mb-4 gap-2">
           <select
@@ -80,7 +81,7 @@ const Todos = () => {
         {data.data.length ? (
           data.data.map(({ id, attributes }: ITodoPaginator, idx: number) => (
             <div
-              className="flex items-center justify-between hover:bg-gray-100 duration-300 p-3 rounded-md even:bg-gray-100"
+              className="flex items-center justify-between bg-gray-200 hover:bg-gray-300 duration-300 p-3 rounded-md even:bg-gray-100"
               key={id}
             >
               <p className="w-full font-semibold">

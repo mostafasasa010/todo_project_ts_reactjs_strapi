@@ -1,5 +1,6 @@
 import NoTodosYet from "../components/NoTodosYet";
-import TodoSkeleton from "../components/skeleton/TodoSkeleton";
+import TodoSkeletonPagination from "../components/skeleton/TodoSkeletonPagination";
+import UserSkeleton from "../components/skeleton/UserSkeleton";
 import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
 import { ITodo } from "../interfaces";
 
@@ -9,7 +10,7 @@ const Profile = () => {
   const userData = userDataString ? JSON.parse(userDataString) : null;
   const userToken = `Bearer ${userData.jwt}`;
 
-  const { data, isLoading, error } = useAuthenticatedQuery({
+  const { data, isLoading, error, isFetching } = useAuthenticatedQuery({
     queryKey: [`profile-page`],
     url: `/users/me?populate=todos`,
     config: {
@@ -19,18 +20,23 @@ const Profile = () => {
     },
   });
 
-  if (isLoading)
+  if (isLoading || isFetching)
     return (
-      <div className="space-y-1 animate-pulse max-w-2xl mx-auto">
+      <div className="space-y-2 animate-pulse">
         {Array.from({ length: 3 }, (_, idx) => (
-          <TodoSkeleton key={idx} />
+          <UserSkeleton key={idx} />
         ))}
+        <div className="flex flex-col gap-2 !mt-7">
+          {Array.from({ length: 3 }, (_, idx) => (
+            <TodoSkeletonPagination key={`todo_${idx}`} />
+          ))}
+        </div>
       </div>
     );
   if (error) return <h3>{error?.message}</h3>;
 
   return (
-    <section className="max-w-2xl mx-auto">
+    <section>
       {data && (
         <div className="w-full flex flex-col gap-2 hover:bg-gray-200 duration-300 p-3 rounded-md bg-gray-100">
           <p className="font-semibold bg-gray-700 rounded-md flex items-center text-white overflow-hidden">

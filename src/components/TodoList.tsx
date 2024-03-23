@@ -42,8 +42,9 @@ const TodoList = () => {
   const [todoToEdit, setTodoToEdit] = useState<ITodo>(defaultTodo);
   const [titleError, setTitleError] = useState("");
   const [todoDone, setTodoDone] = useState(false);
+  const [stateDone, setStateDone] = useState(false);
   const [playSound] = useSound(successSound);
-  const { data, isLoading, error } = useAuthenticatedQuery({
+  const { data, isLoading, error, isFetching } = useAuthenticatedQuery({
     queryKey: ["todoList", `${queryVersion}`],
     url: "/users/me?populate=todos",
     config: {
@@ -120,6 +121,7 @@ const TodoList = () => {
     setTodoDone((prevTodoDone) => !prevTodoDone);
     const updatedTodo = { ...todo, done: todoDone };
     try {
+      setStateDone(true);
       const { status } = await axiosInstance.put(
         `/todos/${todo.id}`,
         {
@@ -139,6 +141,8 @@ const TodoList = () => {
       }
     } catch (error) {
       console.error("Error toggling todo status:", error);
+    } finally {
+      setStateDone(false);
     }
   };
 
@@ -255,28 +259,29 @@ const TodoList = () => {
     }
   };
 
-  if (isLoading)
+  if (isLoading || isFetching || stateDone)
     return (
-      <div className="space-y-1 animate-pulse max-w-2xl mx-auto">
-        {Array.from({ length: 3 }, (_, idx) => (
-          <TodoSkeleton key={idx} />
-        ))}
-      </div>
+      <>
+        <div className="my-10 animate-pulse">
+          <BtnsTodoSkeleton />
+        </div>
+        <div className="space-y-1 animate-pulse">
+          {Array.from({ length: 3 }, (_, idx) => (
+            <TodoSkeleton key={idx} />
+          ))}
+        </div>
+      </>
     );
   if (error) return <h3>{error?.message}</h3>;
 
   return (
     <div className="space-y-1">
       <div className="w-fit mx-auto my-10">
-        {isLoading ? (
-          <BtnsTodoSkeleton />
-        ) : (
-          <div className="flex items-center space-x-2">
-            <Button size={"sm"} onClick={onOpenAddModal}>
-              Post new todo
-            </Button>
-          </div>
-        )}
+        <div className="flex items-center space-x-2">
+          <Button size={"sm"} onClick={onOpenAddModal}>
+            Post new todo
+          </Button>
+        </div>
       </div>
       {data.todos.length ? (
         data.todos.map((todo: ITodo, idx: number) => (

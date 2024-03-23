@@ -2,12 +2,12 @@ const UsersSkeleton = () => {
   return (
     <div
       role="status"
-      className="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-400"
+      className="flex items-center justify-center h-60 w-full bg-gray-300 rounded-md animate-pulse dark:bg-gray-400"
     >
       <svg
         className="w-10 h-10 text-gray-200 dark:text-gray-300"
         aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
+        xmlns="https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg"
         fill="currentColor"
         viewBox="0 0 16 20"
       >
