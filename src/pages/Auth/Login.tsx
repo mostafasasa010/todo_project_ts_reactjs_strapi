@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Button from "../components/ui/Button";
-import Input from "../components/ui/Input";
-import { IErrorResponse, ILoginForm } from "../interfaces";
+import Button from "../../components/ui/Button";
+import Input from "../../components/ui/Input";
+import { IErrorResponse, ILoginForm } from "../../interfaces";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { loginInputs } from "../data";
-import InputErrorMsg from "../components/InputErrorMsg";
-import axiosInstance from "../config/axios.config";
+import { loginInputs } from "../../data";
+import InputErrorMsg from "../../components/InputErrorMsg";
+import axiosInstance from "../../config/axios.config";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 

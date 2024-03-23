@@ -1,9 +1,9 @@
 import { ChangeEvent, useState } from "react";
-import NoTodosYet from "../components/NoTodosYet";
-import Paginator from "../components/Paginator";
-import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
-import { ITodoPaginator } from "../interfaces";
-import TodoSkeletonPagination from "../components/skeleton/TodoSkeletonPagination";
+import NoTodosYet from "../../components/NoTodosYet";
+import Paginator from "../../components/Paginator";
+import useAuthenticatedQuery from "../../hooks/useAuthenticatedQuery";
+import { ITodoPaginator } from "../../interfaces";
+import TodoSkeletonPagination from "../../components/skeleton/TodoSkeletonPagination";
 import { useNavigate } from "react-router-dom";
 
 const Todos = () => {

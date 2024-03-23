@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
-import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
-import UserSkeleton from "../components/skeleton/UserSkeleton";
-import Button from "../components/ui/Button";
+import useAuthenticatedQuery from "../../hooks/useAuthenticatedQuery";
+import UserSkeleton from "../../components/skeleton/UserSkeleton";
+import Button from "../../components/ui/Button";
 
 const Todo = () => {
   const storageKey = "loggedInUser";
@@ -29,7 +29,6 @@ const Todo = () => {
       </div>
     );
   if (error) return <h3>{error?.message}</h3>;
-  console.log(data.data.attributes.user.data.id);
 
   return (
     <section>

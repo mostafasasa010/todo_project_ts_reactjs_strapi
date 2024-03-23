@@ -1,20 +1,22 @@
-import { useNavigate } from "react-router-dom";
-import NoTodosYet from "../components/NoTodosYet";
-import TodoSkeletonPagination from "../components/skeleton/TodoSkeletonPagination";
-import UserSkeleton from "../components/skeleton/UserSkeleton";
-import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
-import { ITodo } from "../interfaces";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import useAuthenticatedQuery from "../../hooks/useAuthenticatedQuery";
+import { ITodo } from "../../interfaces";
+import NoTodosYet from "../../components/NoTodosYet";
+import UserSkeleton from "../../components/skeleton/UserSkeleton";
+import TodoSkeletonPagination from "../../components/skeleton/TodoSkeletonPagination";
+import Button from "../../components/ui/Button";
 
-const Profile = () => {
+const User = () => {
   const storageKey = "loggedInUser";
   const userDataString = localStorage.getItem(storageKey);
   const userData = userDataString ? JSON.parse(userDataString) : null;
   const userToken = `Bearer ${userData.jwt}`;
 
   const navigate = useNavigate();
+  const params = useParams();
   const { data, isLoading, error, isFetching } = useAuthenticatedQuery({
     queryKey: [`profile-page`],
-    url: `/users/me?populate=todos`,
+    url: `/users/${params.id}?populate=todos`,
     config: {
       headers: {
         Authorization: userToken,
@@ -29,7 +31,7 @@ const Profile = () => {
           <UserSkeleton key={idx} />
         ))}
         <div className="flex flex-col gap-2 !mt-7">
-          {Array.from({ length: 3 }, (_, idx) => (
+          {Array.from({ length: 1 }, (_, idx) => (
             <TodoSkeletonPagination key={`todo_${idx}`} />
           ))}
         </div>
@@ -75,10 +77,15 @@ const Profile = () => {
           ) : (
             <NoTodosYet />
           )}
+          <Link to={`/users`}>
+            <Button className="py-2 px-4" variant={"cancel"}>
+              Back
+            </Button>
+          </Link>
         </div>
       )}
     </section>
   );
 };
 
-export default Profile;
+export default User;

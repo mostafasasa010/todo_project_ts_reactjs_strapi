@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import NoTodosYet from "../components/NoTodosYet";
-import Button from "../components/ui/Button";
-import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
-import { IUsers } from "../interfaces";
-import UsersSkeleton from "../components/skeleton/UsersSkeleton";
+import NoTodosYet from "../../components/NoTodosYet";
+import Button from "../../components/ui/Button";
+import useAuthenticatedQuery from "../../hooks/useAuthenticatedQuery";
+import { IUsers } from "../../interfaces";
+import UsersSkeleton from "../../components/skeleton/UsersSkeleton";
 
 const Users = () => {
   const storageKey = "loggedInUser";

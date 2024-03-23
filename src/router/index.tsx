@@ -4,17 +4,17 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
-import PageNotFound from "../pages/PageNotFound";
+import PageNotFound from "../pages/Error/PageNotFound";
 import RootLayout from "../pages/Layout";
 import ErrorHandler from "../components/errors/ErrorHandler";
 import HomePage from "../pages";
-import LoginPage from "../pages/Login";
-import RegisterPage from "../pages/Register";
-import Todos from "../pages/Todos";
-import Profile from "../pages/Profile";
-import Users from "../pages/Users";
+import LoginPage from "../pages/Auth/Login";
+import RegisterPage from "../pages/Auth/Register";
+import Todos from "../pages/Todo/Todos";
 import User from "../pages/User";
 import Todo from "../pages/Todo";
+import Profile from "../pages/User/Profile";
+import Users from "../pages/User/Users";
 
 const storageKey = "loggedInUser";
 const userDataString = localStorage.getItem(storageKey);
