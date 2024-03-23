@@ -4,6 +4,7 @@ import Paginator from "../components/Paginator";
 import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
 import { ITodoPaginator } from "../interfaces";
 import TodoSkeletonPagination from "../components/skeleton/TodoSkeletonPagination";
+import { useNavigate } from "react-router-dom";
 
 const Todos = () => {
   const storageKey = "loggedInUser";
@@ -14,6 +15,7 @@ const Todos = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [sortBy, setSortBy] = useState<string>("ASC");
+  const navigate = useNavigate();
   const { data, isLoading, isFetching, error } = useAuthenticatedQuery({
     queryKey: [`todos-page-${page}`, `${pageSize}`, `${sortBy}`],
     url: `/todos?populate=user&pagination[pageSize]=${pageSize}&pagination[page]=${page}&sort=createdAt:${sortBy}`,
@@ -83,12 +85,13 @@ const Todos = () => {
             <div
               className="flex items-center justify-between bg-gray-200 hover:bg-gray-300 duration-300 p-3 rounded-md even:bg-gray-100"
               key={id}
+              onClick={() => navigate(`/users/${attributes.user.data.id}`)}
             >
               <p className="w-full font-semibold">
                 {idx + 1} - {attributes.title}
               </p>
               <p className="w-full font-semibold text-right">
-                Username:{" "}
+                Name:{" "}
                 <span className="text-indigo-500 font-bold">
                   {attributes.user.data.attributes.username}
                 </span>

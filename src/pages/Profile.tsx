@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import NoTodosYet from "../components/NoTodosYet";
 import TodoSkeletonPagination from "../components/skeleton/TodoSkeletonPagination";
 import UserSkeleton from "../components/skeleton/UserSkeleton";
@@ -10,6 +11,7 @@ const Profile = () => {
   const userData = userDataString ? JSON.parse(userDataString) : null;
   const userToken = `Bearer ${userData.jwt}`;
 
+  const navigate = useNavigate();
   const { data, isLoading, error, isFetching } = useAuthenticatedQuery({
     queryKey: [`profile-page`],
     url: `/users/me?populate=todos`,
@@ -63,6 +65,7 @@ const Profile = () => {
               <div
                 className="flex items-center justify-between bg-gray-200 hover:bg-gray-100 duration-300 p-3 rounded-md"
                 key={id}
+                onClick={() => navigate(`/todos/${id}`)}
               >
                 <p className="w-full font-semibold">
                   {idx + 1} - {title}

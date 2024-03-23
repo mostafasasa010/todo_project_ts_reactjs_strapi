@@ -1,44 +1,35 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
-import { ITodo } from "../interfaces";
-import NoTodosYet from "../components/NoTodosYet";
 import UserSkeleton from "../components/skeleton/UserSkeleton";
-import TodoSkeletonPagination from "../components/skeleton/TodoSkeletonPagination";
 import Button from "../components/ui/Button";
 
-const Users = () => {
+const Todo = () => {
   const storageKey = "loggedInUser";
   const userDataString = localStorage.getItem(storageKey);
   const userData = userDataString ? JSON.parse(userDataString) : null;
   const userToken = `Bearer ${userData.jwt}`;
 
-  const navigate = useNavigate();
   const params = useParams();
   const { data, isLoading, error, isFetching } = useAuthenticatedQuery({
     queryKey: [`profile-page`],
-    url: `/users/${params.id}?populate=todos`,
+    url: `/todos/${params.id}?populate=user`,
     config: {
       headers: {
         Authorization: userToken,
       },
     },
   });
-  console.log(data);
 
   if (isLoading || isFetching)
     return (
       <div className="space-y-2 animate-pulse">
-        {Array.from({ length: 3 }, (_, idx) => (
+        {Array.from({ length: 5 }, (_, idx) => (
           <UserSkeleton key={idx} />
         ))}
-        <div className="flex flex-col gap-2 !mt-7">
-          {Array.from({ length: 1 }, (_, idx) => (
-            <TodoSkeletonPagination key={`todo_${idx}`} />
-          ))}
-        </div>
       </div>
     );
   if (error) return <h3>{error?.message}</h3>;
+  console.log(data.data.attributes.user.data.id);
 
   return (
     <section>
@@ -46,39 +37,45 @@ const Users = () => {
         <div className="w-full flex flex-col gap-2 hover:bg-gray-200 duration-300 p-3 rounded-md bg-gray-100">
           <p className="font-semibold bg-gray-700 rounded-md flex items-center text-white overflow-hidden">
             <span className="bg-indigo-500 rounded-md p-1 text-center text-lg mr-2">
-              Username:
+              Id:
             </span>
-            <span className="truncate">{data.username}</span>
+            <span className="truncate">{data.data.id}</span>
           </p>
           <p className="font-semibold bg-gray-700 rounded-md flex items-center text-white overflow-hidden">
             <span className="bg-indigo-500 rounded-md p-1 text-center text-lg mr-2">
-              Email:
+              Title:
             </span>
-            <span className="truncate">{data.email}</span>
+            <span className="truncate">{data.data.attributes.title}</span>
           </p>
           <p className="font-semibold bg-gray-700 rounded-md flex items-center text-white">
             <span className="bg-indigo-500 rounded-md p-1 text-center text-lg mr-2">
               Date created:
             </span>
-            {data.createdAt?.split("T")[0]}
+            {data.data.attributes.createdAt?.split("T")[0]}
           </p>
-          <h2 className="text-xl font-bold text-gray-700">Todos:</h2>
-          {data.todos?.length ? (
-            data.todos.map(({ id, title }: ITodo, idx: number) => (
-              <div
-                className="flex items-center justify-between bg-gray-200 hover:bg-gray-100 duration-300 p-3 rounded-md"
-                key={id}
-                onClick={() => navigate(`/todos/${id}`)}
-              >
-                <p className="w-full font-semibold">
-                  {idx + 1} - {title}
-                </p>
-              </div>
-            ))
-          ) : (
-            <NoTodosYet />
-          )}
-          <Link to={`/users`}>
+          <p className="font-semibold bg-gray-700 rounded-md flex items-center text-white">
+            <span className="bg-indigo-500 rounded-md p-1 text-center text-lg mr-2">
+              Done:
+            </span>
+            {data.data.attributes.done === true ? "Yes" : "No"}
+          </p>
+          <div className="w-full p-3 border border-gray-200 rounded-md bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+            <label
+              htmlFor="comment"
+              className="text-white text-center text-lg font-semibold"
+            >
+              Description:
+            </label>
+            <div className="px-4 py-2 mt-2 bg-white rounded-md dark:bg-gray-800">
+              <textarea
+                value={data.data.attributes.description}
+                disabled
+                rows={6}
+                className="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
+              />
+            </div>
+          </div>
+          <Link to={`/users/${data.data.attributes.user.data.id}`}>
             <Button className="py-2 px-4" variant={"cancel"}>
               Back
             </Button>
@@ -89,4 +86,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Todo;

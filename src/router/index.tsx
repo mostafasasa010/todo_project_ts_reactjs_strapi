@@ -14,6 +14,7 @@ import Todos from "../pages/Todos";
 import Profile from "../pages/Profile";
 import Users from "../pages/Users";
 import User from "../pages/User";
+import Todo from "../pages/Todo";
 
 const storageKey = "loggedInUser";
 const userDataString = localStorage.getItem(storageKey);
@@ -107,6 +108,18 @@ const router = createBrowserRouter(
               data={userData}
             >
               <User />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="todos/:id"
+          element={
+            <ProtectedRoute
+              isAllowed={userData}
+              redirectPath="/login"
+              data={userData}
+            >
+              <Todo />
             </ProtectedRoute>
           }
         />
