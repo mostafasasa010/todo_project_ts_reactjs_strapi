@@ -278,7 +278,11 @@ const TodoList = () => {
     <div className="space-y-1">
       <div className="w-fit mx-auto my-10">
         <div className="flex items-center space-x-2">
-          <Button size={"sm"} onClick={onOpenAddModal}>
+          <Button
+            className="font-semibold text-base"
+            size={"sm"}
+            onClick={onOpenAddModal}
+          >
             Post new todo
           </Button>
         </div>
