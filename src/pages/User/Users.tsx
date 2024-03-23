@@ -21,12 +21,6 @@ const Users = () => {
     },
   });
 
-  // Handlers
-  // Because creating error
-  // const filteredData = data
-  //   ? [data][0].filter((user: IUsers) => user.id !== userData.user.id)
-  //   : null;
-
   if (isLoading || isFetching)
     return (
       <div className="animate-pulse grid grid-cols-1 gap-4 sm:grid-cols-2">

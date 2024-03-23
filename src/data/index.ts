@@ -1,4 +1,4 @@
-import { ILoginInput, IRegisterInput } from "../interfaces";
+import { ILoginInput, IRegisterInput, IUser } from "../interfaces";
 
 export const registerInputs: IRegisterInput[] = [
   {
@@ -64,4 +64,19 @@ export const loginInputs: ILoginInput[] = [
       },
     },
   },
+];
+
+export const users: IUser[] = [
+  (data) => ({
+    label: "Username:",
+    value: data.username,
+  }),
+  (data) => ({
+    label: "Email:",
+    value: data.email,
+  }),
+  (data) => ({
+    label: "Date created:",
+    value: data.createdAt,
+  }),
 ];

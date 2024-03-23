@@ -12,7 +12,7 @@ import TodoSkeleton from "./skeleton/TodoSkeleton";
 import NoTodosYet from "./NoTodosYet";
 import BtnsTodoSkeleton from "./skeleton/BtnsTodoSkeleton";
 import useSound from "use-sound";
-import successSound from "../assets/success.mp3";
+import successSound from "../assets/audio/success.mp3";
 
 const TodoList = () => {
   // Constants
@@ -118,8 +118,7 @@ const TodoList = () => {
   };
 
   const handleToggleTodoDone = async (todo: ITodo) => {
-    setTodoDone((prevTodoDone) => !prevTodoDone);
-    const updatedTodo = { ...todo, done: todoDone };
+    const updatedTodo = { ...todo, done: !todo.done };
     try {
       setStateDone(true);
       const { status } = await axiosInstance.put(
@@ -136,7 +135,7 @@ const TodoList = () => {
         }
       );
       if (status === 200) {
-        todoDone && playSound();
+        updatedTodo.done && playSound();
         setQueryVersion((prev) => prev + 1);
       }
     } catch (error) {

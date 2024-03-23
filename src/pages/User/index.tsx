@@ -1,10 +1,11 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useAuthenticatedQuery from "../../hooks/useAuthenticatedQuery";
-import { ITodo } from "../../interfaces";
+import { ITodo, IUserData } from "../../interfaces";
 import NoTodosYet from "../../components/NoTodosYet";
 import UserSkeleton from "../../components/skeleton/UserSkeleton";
 import TodoSkeletonPagination from "../../components/skeleton/TodoSkeletonPagination";
 import Button from "../../components/ui/Button";
+import { users } from "../../data";
 
 const User = () => {
   const storageKey = "loggedInUser";
@@ -23,6 +24,21 @@ const User = () => {
       },
     },
   });
+
+  // Renders
+  const renderUsers = (data: IUserData) => {
+    return users.map((user, index) => (
+      <p
+        key={index}
+        className="font-semibold bg-gray-700 rounded-md flex items-center text-white overflow-hidden"
+      >
+        <span className="bg-indigo-500 rounded-md p-1 text-center text-lg mr-2">
+          {user(data).label}
+        </span>
+        <span className="truncate">{user(data).value}</span>
+      </p>
+    ));
+  };
 
   if (isLoading || isFetching)
     return (
@@ -43,24 +59,7 @@ const User = () => {
     <section>
       {data && (
         <div className="w-full flex flex-col gap-2 hover:bg-gray-200 duration-300 p-3 rounded-md bg-gray-100">
-          <p className="font-semibold bg-gray-700 rounded-md flex items-center text-white overflow-hidden">
-            <span className="bg-indigo-500 rounded-md p-1 text-center text-lg mr-2">
-              Username:
-            </span>
-            <span className="truncate">{data.username}</span>
-          </p>
-          <p className="font-semibold bg-gray-700 rounded-md flex items-center text-white overflow-hidden">
-            <span className="bg-indigo-500 rounded-md p-1 text-center text-lg mr-2">
-              Email:
-            </span>
-            <span className="truncate">{data.email}</span>
-          </p>
-          <p className="font-semibold bg-gray-700 rounded-md flex items-center text-white">
-            <span className="bg-indigo-500 rounded-md p-1 text-center text-lg mr-2">
-              Date created:
-            </span>
-            {data.createdAt?.split("T")[0]}
-          </p>
+          {renderUsers(data)}
           <h2 className="text-xl font-bold text-gray-700">Todos:</h2>
           {data.todos?.length ? (
             data.todos.map(({ id, title }: ITodo, idx: number) => (

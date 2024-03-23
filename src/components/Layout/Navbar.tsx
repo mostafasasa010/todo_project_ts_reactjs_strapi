@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { NavLink, useLocation } from "react-router-dom";
-import Button from "./ui/Button";
+import Button from "../ui/Button";
 
 const Navbar = () => {
   const { pathname } = useLocation();

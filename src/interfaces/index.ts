@@ -96,11 +96,24 @@ interface Todo {
 }
 
 export interface IUsers {
-  createdAt: string;
+  createdAt?: string;
   email: string;
   username: string;
   id: number;
-  todos: Todo[];
+  todos?: Todo[];
+}
+
+export interface IUser {
+  (data: { username: string; email: string; createdAt: string }): {
+    label: string;
+    value: string;
+  };
+}
+
+export interface IUserData {
+  username: string;
+  email: string;
+  createdAt: string;
 }
 
 export interface IAuthenticatedQuery {
