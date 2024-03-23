@@ -75,7 +75,13 @@ const Todo = () => {
               />
             </div>
           </div>
-          <Link to={`/users/${data.data.attributes.user.data.id}`}>
+          <Link
+            to={
+              userData.user.id == data.data.attributes.user.data.id
+                ? `/profile`
+                : `/users/${data.data.attributes.user.data.id}`
+            }
+          >
             <Button className="py-2 px-4" variant={"cancel"}>
               Back
             </Button>

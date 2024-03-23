@@ -21,6 +21,12 @@ const Users = () => {
     },
   });
 
+  // Handlers
+  // Because creating error
+  // const filteredData = data
+  //   ? [data][0].filter((user: IUsers) => user.id !== userData.user.id)
+  //   : null;
+
   if (isLoading || isFetching)
     return (
       <div className="animate-pulse grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -34,9 +40,11 @@ const Users = () => {
   return (
     <section>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {data?.length ? (
-          data.map(
-            ({ id, username, email, createdAt }: IUsers, idx: number) => (
+        {[data][0].filter((user: IUsers) => user.id !== userData.user.id)
+          ?.length ? (
+          [data][0]
+            .filter((user: IUsers) => user.id !== userData.user.id)
+            .map(({ id, username, email, createdAt }: IUsers, idx: number) => (
               <div
                 className="w-full flex flex-col gap-2 hover:bg-gray-200 duration-300 p-3 rounded-md bg-gray-100"
                 key={id}
@@ -68,8 +76,7 @@ const Users = () => {
                   </Button>
                 </Link>
               </div>
-            )
-          )
+            ))
         ) : (
           <NoTodosYet />
         )}

@@ -1,10 +1,11 @@
-import { NavLink } from "react-router-dom";
+import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const storageKey = "loggedInUser";
   const userDataString = localStorage.getItem(storageKey);
   const userData = userDataString ? JSON.parse(userDataString) : null;
-  const admin = "mostafa.ahmed@gmail.com";
+
   return (
     <footer className="container z-20 fixed bottom-0 left-[50%] translate-x-[-50%] mb-2">
       <div
@@ -23,38 +24,35 @@ const Footer = () => {
           </a>
           . All Rights Reserved.
         </span>
-        {userData && (
-          <ul className="flex flex-wrap items-center justify-center gap-4 mt-2 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-            {userData?.user?.email === admin && (
-              <>
-                <li>
-                  <NavLink
-                    to="/todos"
-                    className="text-sm text-indigo-300 font-semibold hover:underline m-auto"
-                  >
-                    Todos
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/users"
-                    className="text-sm text-indigo-300 font-semibold hover:underline m-auto"
-                  >
-                    Users
-                  </NavLink>
-                </li>
-              </>
-            )}
-            <li>
-              <NavLink
-                to="/profile"
-                className="text-sm text-indigo-300 font-semibold hover:underline m-auto"
-              >
-                Profile
-              </NavLink>
-            </li>
-          </ul>
-        )}
+        <ul className="flex flex-wrap items-center justify-center gap-3 mt-2 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+          <li>
+            <Link
+              to="https://www.facebook.com/profile.php?id=100015156155072"
+              className="text-sm text-indigo-300 font-semibold hover:underline m-auto"
+              target="_blank"
+            >
+              <FaFacebookF className="text-xl hover:text-[#1877f2] duration-200" />
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="https://www.instagram.com/m_daar4"
+              className="text-sm text-indigo-300 font-semibold hover:underline m-auto"
+              target="_blank"
+            >
+              <FaInstagram className="text-xl hover:text-[#c32aa3] duration-200" />
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="https://twitter.com/Mostafa56069655"
+              className="text-sm text-indigo-300 font-semibold hover:underline m-auto"
+              target="_blank"
+            >
+              <FaTwitter className="text-xl hover:text-[#1da1f2] duration-200" />
+            </Link>
+          </li>
+        </ul>
       </div>
     </footer>
   );

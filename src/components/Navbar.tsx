@@ -68,8 +68,8 @@ const Navbar = () => {
           className="items-center justify-between w-full md:flex md:w-auto md:order-1 text-white"
           id="navbar-user"
         >
-          <ul className="flex flex-col font-medium p-2 md:p-0 mt-3 border border-gray-100 rounded-md bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            {userData && (
+          {userData && (
+            <ul className="flex flex-col font-medium p-2 md:p-0 mt-3 border border-gray-100 rounded-md bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
               <div className="flex items-center justify-center gap-4 sm:gap-4">
                 {userData?.user?.email === admin && (
                   <>
@@ -85,8 +85,8 @@ const Navbar = () => {
                   <NavLink to="/profile">Profile</NavLink>
                 </li>
               </div>
-            )}
-          </ul>
+            </ul>
+          )}
         </div>
       </div>
     </nav>
