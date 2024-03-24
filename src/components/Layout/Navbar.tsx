@@ -26,7 +26,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="container mt-2 mb-6">
+    <nav className="container mt-2 mb-4">
       <div className="flex flex-wrap items-center justify-between mx-auto p-3 dark:bg-gray-900 rounded-md">
         <NavLink
           to="/"

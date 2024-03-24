@@ -43,6 +43,12 @@ const Todos = () => {
     setSortBy(event.target.value);
   };
 
+  const filterdTodos = () =>
+    data.data.filter(
+      (user: { attributes: { user: { data: null } } }) =>
+        user.attributes.user.data !== null
+    );
+
   if (isLoading || isFetching)
     return (
       <div className="space-y-1 animate-pulse mt-20">
@@ -80,24 +86,26 @@ const Todos = () => {
       )}
 
       <div className="flex flex-col gap-1 mb-10">
-        {data.data.length ? (
-          data.data.map(({ id, attributes }: ITodoPaginator, idx: number) => (
-            <div
-              className="flex items-center justify-between bg-gray-200 hover:bg-gray-300 duration-300 p-3 rounded-md even:bg-gray-100"
-              key={id}
-              onClick={() => navigate(`/users/${attributes.user.data.id}`)}
-            >
-              <p className="w-full font-semibold">
-                {idx + 1} - {attributes.title}
-              </p>
-              <p className="w-full font-semibold text-right">
-                Name:{" "}
-                <span className="text-indigo-500 font-bold">
-                  {attributes.user.data.attributes.username}
-                </span>
-              </p>
-            </div>
-          ))
+        {filterdTodos().length ? (
+          filterdTodos().map(
+            ({ id, attributes }: ITodoPaginator, idx: number) => (
+              <div
+                className="flex items-center justify-between bg-gray-200 hover:bg-gray-300 duration-300 p-3 rounded-md even:bg-gray-100"
+                key={id}
+                onClick={() => navigate(`/todos/${id}`)}
+              >
+                <p className="w-full font-semibold">
+                  {idx + 1} - {attributes.title}
+                </p>
+                <p className="w-full font-semibold text-right">
+                  Name:{" "}
+                  <span className="text-indigo-500 font-bold">
+                    {attributes.user.data.attributes.username}
+                  </span>
+                </p>
+              </div>
+            )
+          )
         ) : (
           <NoTodosYet />
         )}

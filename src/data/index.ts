@@ -76,7 +76,7 @@ export const users: IUser[] = [
     value: data.email,
   }),
   (data) => ({
-    label: "Date created:",
-    value: data.createdAt,
+    label: "Created at:",
+    value: data.createdAt.split("T")[0],
   }),
 ];

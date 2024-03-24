@@ -4,6 +4,10 @@ import Button from "../../components/ui/Button";
 import useAuthenticatedQuery from "../../hooks/useAuthenticatedQuery";
 import { IUsers } from "../../interfaces";
 import UsersSkeleton from "../../components/skeleton/UsersSkeleton";
+import Modal from "../../components/ui/Modal";
+import { useState } from "react";
+import axiosInstance from "../../config/axios.config";
+import toast from "react-hot-toast";
 
 const Users = () => {
   const storageKey = "loggedInUser";
@@ -11,8 +15,12 @@ const Users = () => {
   const userData = userDataString ? JSON.parse(userDataString) : null;
   const userToken = `Bearer ${userData.jwt}`;
 
+  const [queryVersion, setQueryVersion] = useState(1);
+  const [isLoadingEdit, setIsLoadingEdit] = useState(false);
+  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+  const [userToRemove, setUserToRemove] = useState(0);
   const { data, isLoading, error, isFetching } = useAuthenticatedQuery({
-    queryKey: [`profile-page`],
+    queryKey: [`users-page-${queryVersion}`],
     url: `/users?populate=todos`,
     config: {
       headers: {
@@ -20,6 +28,50 @@ const Users = () => {
       },
     },
   });
+
+  // Handlers
+  const closeConfirmModal = () => {
+    setIsOpenConfirmModal(false);
+  };
+
+  const openConfirmModal = (id: number) => {
+    setIsOpenConfirmModal(true);
+    setUserToRemove(id);
+  };
+
+  const onSubmitRemoveTodo = async () => {
+    setIsLoadingEdit(true);
+    try {
+      const { status } = await axiosInstance.delete(
+        `/users/${userToRemove}?populate=todos`,
+        {
+          headers: {
+            Authorization: userToken,
+          },
+        }
+      );
+      if (status === 200) {
+        toast.success("Done to Delete User.", {
+          position: "bottom-center",
+          duration: 800,
+          style: {
+            backgroundColor: "black",
+            color: "white",
+            width: "fit-content",
+          },
+        });
+        closeConfirmModal();
+        setQueryVersion((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoadingEdit(false);
+    }
+  };
+
+  const filterdUsers = () =>
+    [data][0].filter((user: IUsers) => user.id !== userData.user.id);
 
   if (isLoading || isFetching)
     return (
@@ -34,11 +86,9 @@ const Users = () => {
   return (
     <section>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {[data][0].filter((user: IUsers) => user.id !== userData.user.id)
-          ?.length ? (
-          [data][0]
-            .filter((user: IUsers) => user.id !== userData.user.id)
-            .map(({ id, username, email, createdAt }: IUsers, idx: number) => (
+        {filterdUsers().length ? (
+          filterdUsers().map(
+            ({ id, username, email, createdAt }: IUsers, idx: number) => (
               <div
                 className="w-full flex flex-col gap-2 hover:bg-gray-200 duration-300 p-3 rounded-md bg-gray-100"
                 key={id}
@@ -64,17 +114,55 @@ const Users = () => {
                   </span>
                   {createdAt?.split("T")[0]}
                 </p>
-                <Link to={`${id}`} className="w-full">
-                  <Button className="py-2 w-full" variant={"cancel"}>
-                    Show
+                <div className="flex gap-2">
+                  <Link to={`${id}`} className="w-full">
+                    <Button className="py-2 w-full" variant={"cancel"}>
+                      Show
+                    </Button>
+                  </Link>
+                  <Button
+                    className="py-2 w-full"
+                    variant={"danger"}
+                    onClick={() => openConfirmModal(id)}
+                  >
+                    Remove
                   </Button>
-                </Link>
+                </div>
               </div>
-            ))
+            )
+          )
         ) : (
           <NoTodosYet />
         )}
       </div>
+
+      {/* Delete TODO CONFIRM MODAL */}
+      <Modal
+        isOpen={isOpenConfirmModal}
+        closeModal={closeConfirmModal}
+        title="Are you sure you want to remove this user from your Store?"
+        description="Deleting this user will remove it permanently from your inventory. Any associated data, sales history, and other related information will also be deleted. Please make sure this is the intended action."
+      >
+        <div className="flex items-center space-x-3">
+          <Button
+            type="submit"
+            isLoading={isLoadingEdit}
+            variant={"danger"}
+            size={"sm"}
+            onClick={onSubmitRemoveTodo}
+          >
+            Yes, remove
+          </Button>
+          <Button
+            type="button"
+            variant={"cancel"}
+            size={"sm"}
+            onClick={closeConfirmModal}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Modal>
     </section>
   );
 };
