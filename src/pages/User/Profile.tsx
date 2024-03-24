@@ -4,6 +4,7 @@ import TodoSkeletonPagination from "../../components/skeleton/TodoSkeletonPagina
 import UserSkeleton from "../../components/skeleton/UserSkeleton";
 import useAuthenticatedQuery from "../../hooks/useAuthenticatedQuery";
 import { ITodo } from "../../interfaces";
+import { OnLogout } from "../../utils";
 
 const Profile = () => {
   const storageKey = "loggedInUser";
@@ -35,7 +36,11 @@ const Profile = () => {
         </div>
       </div>
     );
-  if (error) return <h3>{error?.message}</h3>;
+
+  if (error) {
+    OnLogout();
+    return;
+  }
 
   return (
     <section>

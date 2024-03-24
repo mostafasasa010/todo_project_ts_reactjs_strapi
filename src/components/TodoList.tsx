@@ -13,6 +13,7 @@ import NoTodosYet from "./NoTodosYet";
 import BtnsTodoSkeleton from "./skeleton/BtnsTodoSkeleton";
 import useSound from "use-sound";
 import successSound from "../assets/audio/success.mp3";
+import { OnLogout } from "../utils";
 
 const TodoList = () => {
   // Constants
@@ -271,7 +272,11 @@ const TodoList = () => {
         </div>
       </>
     );
-  if (error) return <h3>{error?.message}</h3>;
+
+  if (error) {
+    OnLogout();
+    return;
+  }
 
   return (
     <div className="space-y-1">

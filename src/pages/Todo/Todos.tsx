@@ -5,6 +5,7 @@ import useAuthenticatedQuery from "../../hooks/useAuthenticatedQuery";
 import { ITodoPaginator } from "../../interfaces";
 import TodoSkeletonPagination from "../../components/skeleton/TodoSkeletonPagination";
 import { useNavigate } from "react-router-dom";
+import { OnLogout } from "../../utils";
 
 const Todos = () => {
   const storageKey = "loggedInUser";
@@ -57,7 +58,11 @@ const Todos = () => {
         ))}
       </div>
     );
-  if (error) return <h3>{error?.message}</h3>;
+
+  if (error) {
+    OnLogout();
+    return;
+  }
 
   return (
     <section>

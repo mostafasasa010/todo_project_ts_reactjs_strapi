@@ -8,6 +8,7 @@ import Modal from "../../components/ui/Modal";
 import { useState } from "react";
 import axiosInstance from "../../config/axios.config";
 import toast from "react-hot-toast";
+import { OnLogout } from "../../utils";
 
 const Users = () => {
   const storageKey = "loggedInUser";
@@ -81,7 +82,11 @@ const Users = () => {
         ))}
       </div>
     );
-  if (error) return <h3>{error?.message}</h3>;
+
+  if (error) {
+    OnLogout();
+    return;
+  }
 
   return (
     <section>

@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import useAuthenticatedQuery from "../../hooks/useAuthenticatedQuery";
 import UserSkeleton from "../../components/skeleton/UserSkeleton";
 import Button from "../../components/ui/Button";
+import { OnLogout } from "../../utils";
 
 const Todo = () => {
   const storageKey = "loggedInUser";
@@ -28,7 +29,11 @@ const Todo = () => {
         ))}
       </div>
     );
-  if (error) return <h3>{error?.message}</h3>;
+
+  if (error) {
+    OnLogout();
+    return;
+  }
 
   return (
     <section>
